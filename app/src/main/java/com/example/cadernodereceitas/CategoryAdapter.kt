@@ -1,10 +1,12 @@
 package com.example.cadernodereceitas
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.cadernodereceitas.databinding.CategoryLayoutBinding
 import com.example.cadernodereceitas.entities.CategoryEntity
 
 class CategoryAdapter(private val ctx: CategoryFragment): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
@@ -15,28 +17,29 @@ class CategoryAdapter(private val ctx: CategoryFragment): RecyclerView.Adapter<C
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): CategoryAdapter.CategoryViewHolder {
-        val viewBinding = CategoryLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val viewBinding = layoutInflater.inflate(R.layout.category_layout, parent, false)
         return CategoryViewHolder(viewBinding)
     }
 
-    override fun onBindViewHolder(holder: CategoryAdapter.CategoryViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
        val categoryItem = categoriesList[position]
        holder.bind(categoryItem)
     }
 
     override fun getItemCount(): Int = categoriesList.size
 
-    inner class CategoryViewHolder(private val viewBinding: CategoryLayoutBinding) : RecyclerView.ViewHolder(viewBinding.root) {
+    inner class CategoryViewHolder(viewBinding: View) : RecyclerView.ViewHolder(viewBinding) {
+
+        private val categoryTitle: TextView = itemView.findViewById(R.id.txt_category)
+        private val categoryImage: ImageView = itemView.findViewById(R.id.mgv_category)
 
         fun bind(categoryEntityItem: CategoryEntity) {
-            viewBinding.txtCategory.text = categoryEntityItem.strCategory
+            categoryTitle.text = categoryEntityItem.strCategory
             Glide.with(ctx)
                 .load(categoryEntityItem.strCategoryThumb)
-                .into(viewBinding.mgvCategory)
+                .into(categoryImage)
 
         }
     }
